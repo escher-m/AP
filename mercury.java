@@ -1,5 +1,6 @@
 // Karishma Sinha 2018339
 import java.util.*;
+
 import java.io.*;
 import java.lang.*;
 
@@ -7,18 +8,9 @@ import java.lang.*;
 
 public class mercury
 {
-	private float  accBal;
-//	public interface basic
-//	{
-//		public void login();
-//		public void categoryView();
-//		public void transactionFee();
-//		public void reward();
-//		public void preward();
-//		public void details();
-//
-//	}
-	public static class merchant //implements basic
+	private static float  accBal;
+	
+	public static class merchant implements basic
 	{
 		private final int mcode;
 		private final String mname;
@@ -161,41 +153,12 @@ public class mercury
 			this.mcontri+=mmoney;
 		}
 
-//		@Override
-//		public void login() {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//		@Override
-//		public void categoryView() {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//		@Override
-//		public void transactionFee() {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//		@Override
-//		public void reward() {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//		@Override
-//		public void preward() {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//		@Override
-//		public void details() {
-//			// TODO Auto-generated method stub
-//			
-//		}
+
+		@Override
+		public void details() {
+			System.out.println(this.mname+" "+ this.maddress+ " "+this.mcontri);
+			
+		}
 
 	}
 	public static class item
@@ -269,7 +232,7 @@ public class mercury
 			System.out.println(this.icode+ " "+ this.iname+ " "+ this.price+" "+ this.qnt+" "+this.offer+" "+this.category);
 		}
 	}
-	public static class customer 
+	public static class customer implements basic
 	{
 		private final int ccode;
 		private final String cname;
@@ -278,6 +241,7 @@ public class mercury
 		private float creward;
 		private int noOfOrdersPlaced;
 		private  ArrayList<item> Irecent=new ArrayList<item>();
+		private  ArrayList<item> cart=new ArrayList<item>();
 		//private queueforlast10itemsbought
 
 		public customer(int cc, String cn, String ca)
@@ -327,44 +291,24 @@ public class mercury
 				mainAcc=0;
 			}
 		}
-		public void setcreward(float cr)
-		{
-			creward+=cr;
-		}
+//		public void setcreward(float cr)
+//		{
+//			creward+=cr;
+//		}
 		public void setnoOfOrdersPlaced()
 		{
 			noOfOrdersPlaced++;
+			if(noOfOrdersPlaced%5==0)
+			{
+				creward+=10;
+			}
 		}
-//		@Override
-//		public void login() {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//		@Override
-//		public void categoryView() {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//		@Override
-//		public void transactionFee() {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//		@Override
-//		public void reward() {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//		@Override
-//		public void preward() {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//		@Override
-//		public void details() {
-//			// TODO Auto-generated method stub
-//			
-//		}
+//		
+		@Override
+		public void details() {
+			
+			System.out.println(this.cname+" "+ this.caddress+ " "+this.noOfOrdersPlaced);
+		}
 	}
 	public static void main(String[] args)
 	{
@@ -570,7 +514,7 @@ public class mercury
 										int transinp=input.nextInt();
 										int trancount=1;
 										if(transinp==1) 
-										{
+										{	int f=-1;
 											for(int k=0;k<M.size();k++)
 											{
 												for(int j=0;j<M.get(k).getI().size();j++)
@@ -590,25 +534,84 @@ public class mercury
 																C.get(i).setmainAccbal(((M.get(k).getI().get(j).getprice())*(M.get(k).getI().get(j).getqnt())));
 																C.get(i).setnoOfOrdersPlaced();
 																System.out.println("Item Successfully bought");
+																f=0;
 															}
 														}
 													}
 												}
 											}
+											if(f==-1)
+											{
+												System.out.println("Item not bought");
+											}
 										}
 										else if(transinp==2) 
 										{
-												
+											for(int k=0;k<M.size();k++)
+											{
+												for(int j=0;j<M.get(k).getI().size();j++)
+												{
+													if(M.get(k).getI().get(j).geticode()==itemToBuy)
+													{
+//														
+																item transItem=new item(trancount,M.get(k).getI().get(j).getiname(),M.get(k).getI().get(j).getprice(),itemQuant, M.get(k).getI().get(j).getcategory());
+																C.get(i).cart.add(transItem);
+																
+																//System.out.println("Item Successfully bought");
+															
+														
+													}
+												}
+											}	
 										}
 										else if(transinp==3) 
 										{
-											
+											break;
 										}
 									
 										break;
-										case 2: break;
-										case 3: break;
-										case 4: break;
+										case 2:
+											for(int co=0;co<C.get(i).cart.size();co++)
+											{
+												int f=-1;
+												for(int k=0;k<M.size();k++)
+												{
+													for(int j=0;j<M.get(k).getI().size();j++)
+													{
+														if(M.get(k).getI().get(j).geticode()==C.get(i).cart.get(co).geticode())
+														{
+//															System.out.println("Item Successfully bought11");
+															if(M.get(k).getI().get(j).getqnt()>=C.get(i).cart.get(co).getqnt())
+															{
+//																System.out.println(C.get(i).);
+																if(C.get(i).getmainAccbal()>=((M.get(k).getI().get(j).getprice())*(C.get(i).cart.get(co).getqnt())))
+																{
+																	
+																	M.get(k).getI().get(j).setqnt(M.get(k).getI().get(j).getqnt()-C.get(i).cart.get(co).getqnt());
+																	//item transItem=new item(trancount,M.get(k).getI().get(j).getiname(),M.get(k).getI().get(j).getprice(),itemQuant, M.get(k).getI().get(j).getcategory());
+																	C.get(i).Irecent.add(C.get(i).cart.get(co));
+																	C.get(i).setmainAccbal(((M.get(k).getI().get(j).getprice())*(C.get(i).cart.get(co).getqnt())));
+																	C.get(i).setnoOfOrdersPlaced();
+																	System.out.println("Item Successfully bought");
+																	f=0;
+																}
+															}
+														}
+													}
+												}
+												if(f==-1)
+												{
+													System.out.println("Item not bought");
+													break;
+												}
+											}
+											break;
+										case 3: System.out.println(C.get(i).getcreward());
+											break;
+										case 4: 
+											
+											Collections.reverse(C.get(i).cart);
+											break;
 										case 5: break;
 										default: System.out.println("Enter valid option");
 										break;
@@ -617,8 +620,34 @@ public class mercury
 							}}
 										
 					
-				case 3: break;
-				case 4: break;
+				case 3: 
+					System.out.println("Enter M/C");
+					String mc=input.next();
+					if(mc.equals("M"))
+					{
+						for (int i = 0; i < M.size(); i++)
+						{
+							System.out.println(M.get(i).getmcode()+" "+M.get(i).getmname());
+							
+						}
+						int checkcode=input.nextInt();
+						M.get(checkcode-1).details();
+					}
+					else if(mc.equals("C"))
+					{
+						for (int i = 0; i < C.size(); i++)
+						{
+							System.out.println(C.get(i).getccode()+" "+C.get(i).getcname());
+							
+						}
+						int checkcode=input.nextInt();
+						C.get(checkcode-1).details();
+					}
+					
+					break;
+				case 4:
+					System.out.println(mercury.accBal);
+					break;
 				case 5: break;
 				default: System.out.println("Enter valid option");
 					break;
